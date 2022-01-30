@@ -8,9 +8,9 @@ public class BoxFormation
 {
     internal Dictionary<Vector2Int, Box> boxes = new Dictionary<Vector2Int, Box>();
     internal List<Vector2Int> ghosts = new List<Vector2Int>();
-    internal Vector2Int offset = new Vector2Int(4, 20);
-    internal bool IsPlaced = false;
-
+    internal Vector2Int offset = new Vector2Int(5, 21);
+    internal bool IsPlaced { get { return _isPlaced; } set { _isPlaced = value; if(_isPlaced) GameState.IsGameOver = IsPlacedOverLimit(); } }
+    bool _isPlaced = false;
     FormTemplate _form;
 
 
@@ -29,6 +29,13 @@ public class BoxFormation
 
 
         RefreshBoxes(startPos);
+
+    }
+
+    internal void InstaDrop()
+    {
+        RefreshBoxes(ghosts);
+        IsPlaced = true;
 
     }
 
@@ -95,6 +102,8 @@ public class BoxFormation
                 }
                 
             }
+
+            
         }
 
     }
@@ -132,9 +141,6 @@ public class BoxFormation
 
     internal void Move(Vector2Int velocity)
     {
-
-
-        
         if (IsBlockedOnHorizontal(velocity.x))
         {
 
@@ -195,6 +201,9 @@ public class BoxFormation
     }
 
 
-
+    bool IsPlacedOverLimit()
+    {
+        return boxes.Keys.Any(pos => pos.y >= 20);
+    }
 
 }
