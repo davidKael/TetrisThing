@@ -25,10 +25,10 @@ public class Box : MonoBehaviour
         sr.color = Color.white;
     }
 
-    internal void ActivateBox()
+    internal void ActivateBox(Color color)
     {
 
-
+        sr.color = color;
         sr.enabled = true;
         isActive = true;
     }

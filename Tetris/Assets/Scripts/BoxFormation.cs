@@ -10,15 +10,18 @@ public class BoxFormation
     internal Vector2Int offset = new Vector2Int(4, 20);
     internal bool IsPlaced = false;
 
-    internal BoxFormation()
+    FormTemplate _form;
+
+    internal BoxFormation(FormTemplate form)
     {
-        List<Vector2Int> startPos = new List<Vector2Int>();
+        _form = form;
 
-        int formationID = RandomIndex();
+        List<Vector2Int> startPos = new List<Vector2Int>(_form.FormationPositions);
 
-        foreach(Vector2Int pos in AllFormTypes[formationID])
+      
+        for (int i = 0; i< startPos.Count; i++)
         {
-            startPos.Add(pos + offset);
+            startPos[i] += offset;
         }
 
 
@@ -28,12 +31,7 @@ public class BoxFormation
 
     void RefreshBoxes(List<Vector2Int> newPositions)
     {
-        if(newPositions.Any(pos => pos.y < 0) || (Box.All.Values.Any(box => box.isActive && newPositions.Contains(box.pos) && !boxes.ContainsKey(box.pos))))
-        {
-            IsPlaced = true;
-            return;
-        }
-        else
+        if(newPositions.Count > 0)
         {
             if (boxes.Count > 0)
             {
@@ -44,6 +42,7 @@ public class BoxFormation
 
                     if (!newPositions.Contains(item.Key))
                     {
+
                         removables.Add(item.Key);
 
                     }
@@ -66,101 +65,79 @@ public class BoxFormation
                 if (!boxes.ContainsKey(newPos))
                 {
                     boxes.Add(newPos, Box.All[newPos]);
-                    boxes[newPos].ActivateBox();
+                    boxes[newPos].ActivateBox(_form.Color);
                 }
             }
-
         }
+
+           
+
+
 
        
 
     }
 
-    internal void Fall()
+    internal void Move(Vector2Int velocity)
     {
-        List<Vector2Int> falledPos = new List<Vector2Int>();
-        foreach (Vector2Int pos in boxes.Keys)
+
+
+        
+        if (IsAbleToMoveOnHorizontal(velocity))
         {
-            falledPos.Add(new Vector2Int(pos.x, pos.y - 1));
+
+            velocity.x = 0;
         }
 
-        RefreshBoxes(falledPos);
+       
+
+        if (IsAbleToMoveOnVerticalAndHorizontal(velocity))
+        {
+            velocity.y = 0;
+
+ 
+
+            IsPlaced = true;
+        }
+
+        if(velocity != Vector2Int.zero)
+        {
+            List<Vector2Int> nextPositions = new List<Vector2Int>();
+
+            foreach (Vector2Int pos in boxes.Keys)
+            {
+                nextPositions.Add(pos + velocity);
+            }
+
+            if (!IsPlaced)
+            {
+
+                RefreshBoxes(nextPositions);
+            }
+
+
+        }
+
+
+
+
+    }
+
+    bool IsAbleToMoveOnHorizontal(Vector2Int velocity)
+    {
+           //not out side the x-axis?                                                     /is aktive?                                                                                             //not already in formation
+        return boxes.Keys.Any(pos => pos.x + velocity.x > 9 || pos.x + velocity.x < 0) || velocity.x != 0 && boxes.Keys.Any(pos => Box.All[new Vector2Int(pos.x + velocity.x, pos.y)].isActive && !boxes.ContainsKey(new Vector2Int(pos.x + velocity.x, pos.y)));
     }
 
 
-    List<List<Vector2Int>> AllFormTypes = new List<List<Vector2Int>>()
+    bool IsAbleToMoveOnVerticalAndHorizontal(Vector2Int velocity)
     {
-        //Box
-        new List<Vector2Int>()
-        {
-            new Vector2Int(0, 0),
-            new Vector2Int(1, 0),
-            new Vector2Int(0, 1),
-            new Vector2Int(1, 1)
-        },
-
-        //Line
-        new List<Vector2Int>()
-        {
-            new Vector2Int(0, 0),
-            new Vector2Int(0, 1),
-            new Vector2Int(0, 2),
-            new Vector2Int(0, 3)
-        },
-
-        //L
-        new List<Vector2Int>()
-        {
-            new Vector2Int(-1, 0),
-            new Vector2Int(-1, 1),
-            new Vector2Int(0, 1),
-            new Vector2Int(1, 1)
-        },
-
-        //Reversed L
-        new List<Vector2Int>()
-        {
-            new Vector2Int(-1, 0),
-            new Vector2Int(0, 0),
-            new Vector2Int(1, 0),
-            new Vector2Int(-1, 1)
-        },
-
-        //Z
-        new List<Vector2Int>()
-        {
-            new Vector2Int(0, 0),
-            new Vector2Int(1, 0),
-            new Vector2Int(0, 1),
-            new Vector2Int(-1, 1)
-        },
-
-        //Reversed Z
-        new List<Vector2Int>()
-        {
-            new Vector2Int(0, 0),
-            new Vector2Int(-1, 0),
-            new Vector2Int(0, 1),
-            new Vector2Int(1, 1)
-        },
-
-        //T
-        new List<Vector2Int>()
-        {
-            new Vector2Int(0, 0),
-            new Vector2Int(-1, 1),
-            new Vector2Int(0, 1),
-            new Vector2Int(1, 1)
-        },
-
-    };
-
-    int RandomIndex()
-    {
-        System.Random random = new System.Random();
-
-        return random.Next(0, AllFormTypes.Count);
+                //not outside on y-axis                              //is active                                                   //is not already in formation     
+        return boxes.Keys.Any(pos => pos.y + velocity.y < 0) || (boxes.Keys.Any(pos => Box.All[pos + velocity].isActive && !boxes.ContainsKey(pos + velocity)));
     }
+
+
+    
 
 
 }

@@ -1,58 +1,97 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Tester : MonoBehaviour
 {
-    float timer = 0;
+    float fallTimer = 0;
+    float sideTimer = 0;
     float fallWait = 0.5f;
+    float sideWait = 0.5f;
     float rushSpeed = 6;
-    int yOffset = 20;
     BoxFormation bf;
 
     bool isRushing = false;
+    bool isMovingHorizontal = false;
 
-   
+    [SerializeField]
+    List<FormTemplate> formTemplates = new List<FormTemplate>();
+    System.Random random = new System.Random();
+
+    private void Start()
+    {
+        bf = new BoxFormation(GetRandomForm());
+
+    }
 
     private void Update()
     {
 
+        int horizontalInput = 0;
+        int verticalInput = 0;
 
         isRushing = Input.GetKey(KeyCode.DownArrow);
-    
 
-        if(bf != null)
+        if(Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            if (timer <= 0)
-            {
+            sideTimer = sideWait;
+        }
 
-                bf.Fall();
-                if (bf.IsPlaced)
+        isMovingHorizontal = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
+          
+
+
+
+
+        if (bf != null)
+        {
+
+            if (fallTimer <= 0)
+            {
+                verticalInput = -1;
+                fallTimer = fallWait;
+            }
+            else
+            {
+                fallTimer -= Time.deltaTime * (isRushing ? rushSpeed : 1);
+            }
+
+
+            if (isMovingHorizontal)
+            {
+                if (sideTimer <= 0)
                 {
-                    bf = null;
-                    return;
+                    horizontalInput += Input.GetKey(KeyCode.RightArrow) ? 1 : 0;
+                    horizontalInput += Input.GetKey(KeyCode.LeftArrow) ? -1 : 0;
+                    sideTimer = sideWait;
                 }
                 else
                 {
-                    timer = fallWait;
+                    sideTimer -= Time.deltaTime *  rushSpeed;
                 }
-
-               
             }
 
-            else
+            Vector2Int velocity = new Vector2Int(horizontalInput, verticalInput);
+
+            bf.Move(velocity);
+
+            if (bf.IsPlaced)
             {
-                timer -= Time.deltaTime * (isRushing ? rushSpeed : 1);
-            }
+                bf = new BoxFormation(GetRandomForm());
 
+            }
+            
+
+            
         }
-        else
-        {
-            bf = new BoxFormation();
-            timer = fallWait;
-        }
+
+        
 
     }
 
-
+    FormTemplate GetRandomForm()
+    {
+        return formTemplates[random.Next(0, formTemplates.Count)];
+    }
 }
