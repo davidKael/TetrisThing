@@ -7,10 +7,13 @@ using System;
 public class BoxFormation 
 {
     internal Dictionary<Vector2Int, Box> boxes = new Dictionary<Vector2Int, Box>();
+    internal List<Vector2Int> ghosts = new List<Vector2Int>();
     internal Vector2Int offset = new Vector2Int(4, 20);
     internal bool IsPlaced = false;
 
     FormTemplate _form;
+
+
 
     internal BoxFormation(FormTemplate form)
     {
@@ -66,15 +69,64 @@ public class BoxFormation
                 {
                     boxes.Add(newPos, Box.All[newPos]);
                     boxes[newPos].ActivateBox(_form.Color);
+
+
+                    
+
                 }
+            }
+
+            foreach(Vector2Int ghostpos in ghosts)
+            {
+                if (!boxes.Keys.Any(pos => pos == ghostpos))
+                {
+                    Box.All[ghostpos].ResetBox();
+
+                }
+            }
+
+            ghosts = new List<Vector2Int>(GetGhostPositions());
+
+            for(int i = 0; i < ghosts.Count; i++)
+            {
+                if(!boxes.Keys.Any(pos => pos == ghosts[i]))
+                {
+                    Box.All[ghosts[i]].TurnGhost(_form.Color);
+                }
+                
             }
         }
 
-           
+    }
 
+    List<Vector2Int> GetGhostPositions()
+    {
+        List<Vector2Int> ghostPositions = new List<Vector2Int>(boxes.Keys);
 
+        
 
-       
+        while (true)
+        {
+            if (ghostPositions.Any(ghostPos => IsPosBlockedOnVertical(ghostPos)))
+            {
+                break;
+                
+
+            }
+            else
+            {
+                for(int i = 0; i < ghostPositions.Count; i++)
+                {
+                    
+                    ghostPositions[i] += new Vector2Int(0, -1);
+
+                }
+
+            }
+
+        }
+
+        return ghostPositions;
 
     }
 
@@ -83,7 +135,7 @@ public class BoxFormation
 
 
         
-        if (IsAbleToMoveOnHorizontal(velocity))
+        if (IsBlockedOnHorizontal(velocity.x))
         {
 
             velocity.x = 0;
@@ -91,12 +143,12 @@ public class BoxFormation
 
        
 
-        if (IsAbleToMoveOnVerticalAndHorizontal(velocity))
+        if (IsBlocked(velocity))
         {
-            velocity.y = 0;
+            velocity = Vector2Int.zero;
 
- 
 
+            ghosts.Clear();
             IsPlaced = true;
         }
 
@@ -123,21 +175,26 @@ public class BoxFormation
 
     }
 
-    bool IsAbleToMoveOnHorizontal(Vector2Int velocity)
+    bool IsBlockedOnHorizontal(int horizontalVel)
     {
            //not out side the x-axis?                                                     /is aktive?                                                                                             //not already in formation
-        return boxes.Keys.Any(pos => pos.x + velocity.x > 9 || pos.x + velocity.x < 0) || velocity.x != 0 && boxes.Keys.Any(pos => Box.All[new Vector2Int(pos.x + velocity.x, pos.y)].isActive && !boxes.ContainsKey(new Vector2Int(pos.x + velocity.x, pos.y)));
+        return boxes.Keys.Any(pos => pos.x + horizontalVel > 9 || pos.x + horizontalVel < 0) || horizontalVel != 0 && boxes.Keys.Any(pos => Box.All[new Vector2Int(pos.x + horizontalVel, pos.y)].isActive && !boxes.ContainsKey(new Vector2Int(pos.x + horizontalVel, pos.y)));
     }
 
 
-    bool IsAbleToMoveOnVerticalAndHorizontal(Vector2Int velocity)
+    bool IsBlocked(Vector2Int velocity)
     {
                 //not outside on y-axis                              //is active                                                   //is not already in formation     
         return boxes.Keys.Any(pos => pos.y + velocity.y < 0) || (boxes.Keys.Any(pos => Box.All[pos + velocity].isActive && !boxes.ContainsKey(pos + velocity)));
     }
 
+    bool IsPosBlockedOnVertical(Vector2Int pos)
+    {
+        //not outside on y-axis                                          //is active                                                   
+        return (pos.y - 1 < 0) || (Box.All[new Vector2Int(pos.x, pos.y - 1)].isActive && !boxes.ContainsKey(new Vector2Int(pos.x, pos.y -1)));
+    }
 
-    
+
 
 
 }

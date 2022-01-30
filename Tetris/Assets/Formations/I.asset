@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cad37aa892cddf14fad557c547837e4b, type: 3}
-  m_Name: Line
+  m_Name: I
   m_EditorClassIdentifier: 
   Color: {r: 0, g: 0.8298557, b: 1, a: 1}
   FormationPositions:
+  - {x: 0, y: -1}
   - {x: 0, y: 0}
   - {x: 0, y: 1}
   - {x: 0, y: 2}
-  - {x: 0, y: 3}

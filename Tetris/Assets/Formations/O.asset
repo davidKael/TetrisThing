@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cad37aa892cddf14fad557c547837e4b, type: 3}
-  m_Name: Box
+  m_Name: O
   m_EditorClassIdentifier: 
   Color: {r: 0.90572155, g: 1, b: 0, a: 1}
   FormationPositions:
