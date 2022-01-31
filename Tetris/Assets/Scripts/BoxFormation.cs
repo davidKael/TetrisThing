@@ -13,7 +13,8 @@ public class BoxFormation
     bool _isPlaced = false;
     FormTemplate _form;
 
-
+    Vector2Int centerPos;
+    int rotation = 0;
 
     internal BoxFormation(FormTemplate form)
     {
@@ -21,25 +22,26 @@ public class BoxFormation
 
         List<Vector2Int> startPos = new List<Vector2Int>(_form.FormationPositions);
 
-      
         for (int i = 0; i< startPos.Count; i++)
         {
+
+
             startPos[i] += offset;
         }
 
 
-        RefreshBoxes(startPos);
+        RefreshBoxes(startPos, Vector2Int.zero + offset);
 
     }
 
     internal void InstaDrop()
     {
-        RefreshBoxes(ghosts);
+        RefreshBoxes(ghosts, Vector2Int.zero);
         IsPlaced = true;
 
     }
 
-    void RefreshBoxes(List<Vector2Int> newPositions)
+    void RefreshBoxes(List<Vector2Int> newPositions, Vector2Int nexRotCenter)
     {
         if(newPositions.Count > 0)
         {
@@ -103,9 +105,10 @@ public class BoxFormation
                 
             }
 
-            
-        }
+            centerPos = nexRotCenter;
 
+        }
+      
     }
 
     List<Vector2Int> GetGhostPositions()
@@ -147,8 +150,6 @@ public class BoxFormation
             velocity.x = 0;
         }
 
-       
-
         if (IsBlocked(velocity))
         {
             velocity = Vector2Int.zero;
@@ -162,15 +163,23 @@ public class BoxFormation
         {
             List<Vector2Int> nextPositions = new List<Vector2Int>();
 
-            foreach (Vector2Int pos in boxes.Keys)
-            {
-                nextPositions.Add(pos + velocity);
-            }
+
 
             if (!IsPlaced)
             {
+                Vector2Int newCenter = Vector2Int.zero;
 
-                RefreshBoxes(nextPositions);
+                foreach (Vector2Int pos in boxes.Keys)
+                {
+                    nextPositions.Add(pos + velocity);
+
+                    if (pos == centerPos)
+                    {
+                        newCenter = centerPos + velocity;
+                    }
+                }
+
+                RefreshBoxes(nextPositions, newCenter);
             }
 
 
@@ -191,7 +200,7 @@ public class BoxFormation
     bool IsBlocked(Vector2Int velocity)
     {
                 //not outside on y-axis                              //is active                                                   //is not already in formation     
-        return boxes.Keys.Any(pos => pos.y + velocity.y < 0) || (boxes.Keys.Any(pos => Box.All[pos + velocity].isActive && !boxes.ContainsKey(pos + velocity)));
+        return boxes.Keys.Any(pos => (pos.y + velocity.y < 0) || pos.x + velocity.x > 9 || pos.x + velocity.x < 0) || (boxes.Keys.Any(pos => Box.All[pos + velocity].isActive && !boxes.ContainsKey(pos + velocity)));
     }
 
     bool IsPosBlockedOnVertical(Vector2Int pos)
@@ -206,4 +215,56 @@ public class BoxFormation
         return boxes.Keys.Any(pos => pos.y >= 20);
     }
 
+
+    internal void Rotate()
+    {
+        List<Vector2Int> wantedPositions = new List<Vector2Int>();
+        
+
+        if (_form.IsRotatable())
+        {
+
+            switch (rotation + 1 > _form.AmountOfRotations ? 0 : rotation + 1)
+            {
+                case 1:
+                    wantedPositions = new List<Vector2Int>(_form.RotationForm1);
+                    break;
+                case 2:
+                    wantedPositions = new List<Vector2Int>(_form.RotationForm2);
+                    break;
+                case 3:
+                    wantedPositions = new List<Vector2Int>(_form.RotationForm3);
+                    break;
+                default:
+                    wantedPositions = new List<Vector2Int>(_form.FormationPositions);
+                    break;
+
+            }
+
+            if (!wantedPositions.Any(pos => IsBlocked(pos)))
+            {
+                rotation = rotation + 1 > _form.AmountOfRotations ? 0 : rotation + 1;
+
+                for (int i = 0; i < wantedPositions.Count; i++)
+                {
+                    Vector2Int newPos = new Vector2Int(wantedPositions[i].x + centerPos.x, wantedPositions[i].y + centerPos.y);
+
+                    wantedPositions[i] = newPos;
+
+
+
+                }
+
+                if (wantedPositions.Count > 0)
+                {
+
+
+
+                    RefreshBoxes(wantedPositions, centerPos);
+                }
+            }
+
+
+        }
+    }
 }

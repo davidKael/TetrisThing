@@ -49,9 +49,15 @@ public class Controller : MonoBehaviour
                 {
                     bf.InstaDrop();
                 }
+                else if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    bf.Rotate();
+                    return;
+                }
 
                 else
                 {
+
 
                     if (fallTimer <= 0)
                     {
@@ -82,9 +88,6 @@ public class Controller : MonoBehaviour
 
                     bf.Move(velocity);
                 }
-
-
-
                 if (bf.IsPlaced)
                 {
                     bf = null;

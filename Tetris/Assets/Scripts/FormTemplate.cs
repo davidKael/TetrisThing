@@ -6,8 +6,17 @@ using UnityEngine;
 public class FormTemplate : ScriptableObject
 {
     public Color Color;
-
-
+    
     public List<Vector2Int> FormationPositions;
+    public List<Vector2Int> RotationForm1;
+    public List<Vector2Int> RotationForm2;
+    public List<Vector2Int> RotationForm3;
+    public bool IsRotatable()
+    {
+        return AmountOfRotations > 0;
+    }
 
+    public int AmountOfRotations = 0;
+
+   
 }

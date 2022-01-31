@@ -14,7 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Color: {r: 0, g: 0.8298557, b: 1, a: 1}
   FormationPositions:
-  - {x: 0, y: -1}
-  - {x: 0, y: 0}
-  - {x: 0, y: 1}
   - {x: 0, y: 2}
+  - {x: 0, y: 1}
+  - {x: 0, y: 0}
+  - {x: 0, y: -1}
+  RotationForm1:
+  - {x: -1, y: 0}
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  RotationForm2: []
+  RotationForm3: []
+  IsRotatable: 1
