@@ -17,7 +17,6 @@ public class BoxFormation
     int rotation = 0;
 
 
-
     List<Vector2Int> wallKicks = new List<Vector2Int>()
         {
             new Vector2Int(0, 0),
@@ -133,7 +132,7 @@ public class BoxFormation
                 
             }
 
-            centerPos = nexRotCenter;
+                centerPos = nexRotCenter;
 
         }
       
@@ -221,20 +220,20 @@ public class BoxFormation
     bool IsBlockedOnHorizontal(int horizontalVel)
     {
            //not out side the x-axis?                                                     /is aktive?                                                                                             //not already in formation
-        return boxes.Keys.Any(pos => pos.x + horizontalVel > 9 || pos.x + horizontalVel < 0) || horizontalVel != 0 && boxes.Keys.Any(pos => Box.All[new Vector2Int(pos.x + horizontalVel, pos.y)].isActive && !boxes.ContainsKey(new Vector2Int(pos.x + horizontalVel, pos.y)));
+        return boxes.Keys.Any(pos => pos.x + horizontalVel > 9 || pos.x + horizontalVel < 0) || horizontalVel != 0 && boxes.Keys.Any(pos => Box.All[new Vector2Int(pos.x + horizontalVel, pos.y)].IsActive && !boxes.ContainsKey(new Vector2Int(pos.x + horizontalVel, pos.y)));
     }
 
 
     bool IsBlocked(Vector2Int velocity)
     {
                 //not outside on y-axis                              //is active                                                   //is not already in formation     
-        return boxes.Keys.Any(pos => (pos.y + velocity.y < 0) || pos.x + velocity.x > 9 || pos.x + velocity.x < 0) || (boxes.Keys.Any(pos => Box.All[pos + velocity].isActive && !boxes.ContainsKey(pos + velocity)));
+        return boxes.Keys.Any(pos => (pos.y + velocity.y < 0) || pos.x + velocity.x > 9 || pos.x + velocity.x < 0) || (boxes.Keys.Any(pos => Box.All[pos + velocity].IsActive && !boxes.ContainsKey(pos + velocity)));
     }
 
     bool IsPosBlockedOnVertical(Vector2Int pos)
     {
         //not outside on y-axis                                          //is active                                                   
-        return (pos.y - 1 < 0) || (Box.All[new Vector2Int(pos.x, pos.y - 1)].isActive && !boxes.ContainsKey(new Vector2Int(pos.x, pos.y -1)));
+        return (pos.y - 1 < 0) || (Box.All[new Vector2Int(pos.x, pos.y - 1)].IsActive && !boxes.ContainsKey(new Vector2Int(pos.x, pos.y -1)));
     }
 
 
@@ -287,7 +286,7 @@ public class BoxFormation
 
                 if (wantedPositions.Count > 0)
                 {
-                    Debug.Log(wallKickVelocity);
+                   
                     RefreshBoxes(wantedPositions, centerPos + (Vector2Int)wallKickVelocity);
                     return true;
                 }

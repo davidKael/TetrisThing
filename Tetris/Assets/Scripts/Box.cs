@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Box : MonoBehaviour
 {
-    internal bool isActive = false;
+    internal bool IsActive = false;
     SpriteRenderer sr;
     internal Vector2Int pos;
     internal static Dictionary<Vector2Int, Box> All = new Dictionary<Vector2Int, Box>();
@@ -19,7 +19,7 @@ public class Box : MonoBehaviour
 
     internal void ResetBox()
     {
-        isActive = false;
+        IsActive = false;
         
         sr.enabled = false;
         sr.color = Color.white;
@@ -30,7 +30,7 @@ public class Box : MonoBehaviour
 
         sr.color = color;
         sr.enabled = true;
-        isActive = true;
+        IsActive = true;
     }
 
     internal bool IsOutside()
@@ -43,5 +43,27 @@ public class Box : MonoBehaviour
         
         sr.color = new Color(color.r, color.g, color.b, 0.25f);
         sr.enabled = true;
+    }
+
+    void MoveDown(int rows)
+    {
+        if (IsActive)
+        {
+            Box.All[new Vector2Int(pos.x, pos.y - rows)].ActivateBox(sr.color);
+            ResetBox();
+        }
+        
+    }
+
+    internal static void MoveDownAll(int lowestRow, int amount)
+    {
+        for (int row = lowestRow; row < 20; row++)
+        {
+            for (int col = 0; col < 10; col++)
+            {
+               // Debug.Log($"row={row},col={col}");
+                All[new Vector2Int(col, row)].MoveDown(amount);
+            }
+        }
     }
 }

@@ -53,7 +53,7 @@ public class Controller : MonoBehaviour
                 {
 
 
-                        return;
+                    return;
 
                     
                 }
@@ -90,9 +90,13 @@ public class Controller : MonoBehaviour
                     Vector2Int velocity = new Vector2Int(horizontalInput, verticalInput);
 
                     bf.Move(velocity);
+
                 }
                 if (bf.IsPlaced)
                 {
+
+                    ScoreHandler.PlaceForm(bf);
+
                     bf = null;
                     return;
                 }
