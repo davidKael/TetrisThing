@@ -49,10 +49,13 @@ public class Controller : MonoBehaviour
                 {
                     bf.InstaDrop();
                 }
-                else if (Input.GetKeyDown(KeyCode.Space))
+                else if (Input.GetKeyDown(KeyCode.Space) && bf.Rotate())
                 {
-                    bf.Rotate();
-                    return;
+
+
+                        return;
+
+                    
                 }
 
                 else

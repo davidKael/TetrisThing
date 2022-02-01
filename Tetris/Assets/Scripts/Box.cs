@@ -41,9 +41,6 @@ public class Box : MonoBehaviour
     internal void TurnGhost(Color color)
     {
         
-       
-
-       
         sr.color = new Color(color.r, color.g, color.b, 0.25f);
         sr.enabled = true;
     }

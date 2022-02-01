@@ -8,13 +8,41 @@ public class BoxFormation
 {
     internal Dictionary<Vector2Int, Box> boxes = new Dictionary<Vector2Int, Box>();
     internal List<Vector2Int> ghosts = new List<Vector2Int>();
-    internal Vector2Int offset = new Vector2Int(5, 21);
+    internal Vector2Int offset = new Vector2Int(4, 21);
     internal bool IsPlaced { get { return _isPlaced; } set { _isPlaced = value; if(_isPlaced) GameState.IsGameOver = IsPlacedOverLimit(); } }
     bool _isPlaced = false;
     FormTemplate _form;
 
     Vector2Int centerPos;
     int rotation = 0;
+
+
+
+    List<Vector2Int> wallKicks = new List<Vector2Int>()
+        {
+            new Vector2Int(0, 0),
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0),
+
+            new Vector2Int(0, 1),
+            new Vector2Int(1, 1),
+            new Vector2Int(-1, 1),
+
+
+            new Vector2Int(2, 0),
+            new Vector2Int(-2, 0),
+            new Vector2Int(0, 2),
+
+            new Vector2Int(2, 1),
+            new Vector2Int(-2, 1),
+
+
+            new Vector2Int(1, 2),
+            new Vector2Int(-1, 2),
+
+            new Vector2Int(2, 2),
+            new Vector2Int(-2, 2),
+        };
 
     internal BoxFormation(FormTemplate form)
     {
@@ -216,7 +244,7 @@ public class BoxFormation
     }
 
 
-    internal void Rotate()
+    internal bool Rotate()
     {
         List<Vector2Int> wantedPositions = new List<Vector2Int>();
         
@@ -241,13 +269,15 @@ public class BoxFormation
 
             }
 
-            if (!wantedPositions.Any(pos => IsBlocked(pos)))
+
+
+            if (IsRoomForRotation(wantedPositions, out Vector2Int? wallKickVelocity))
             {
                 rotation = rotation + 1 > _form.AmountOfRotations ? 0 : rotation + 1;
 
                 for (int i = 0; i < wantedPositions.Count; i++)
                 {
-                    Vector2Int newPos = new Vector2Int(wantedPositions[i].x + centerPos.x, wantedPositions[i].y + centerPos.y);
+                    Vector2Int newPos = wantedPositions[i] + centerPos + (Vector2Int)wallKickVelocity;
 
                     wantedPositions[i] = newPos;
 
@@ -257,14 +287,66 @@ public class BoxFormation
 
                 if (wantedPositions.Count > 0)
                 {
-
-
-
-                    RefreshBoxes(wantedPositions, centerPos);
+                    Debug.Log(wallKickVelocity);
+                    RefreshBoxes(wantedPositions, centerPos + (Vector2Int)wallKickVelocity);
+                    return true;
                 }
+
             }
 
 
+            
+
+
         }
+
+        return false;
+
+    }
+
+    bool IsRoomForRotation(List<Vector2Int> orgWantedRotPos, out Vector2Int? wallKickVelocity)
+    {
+
+
+
+        int wallfloorKickTried = 0;
+
+        while (true)
+        {
+
+            List<Vector2Int> newWallKickPositions = new List<Vector2Int>(orgWantedRotPos);
+
+            for (int i = 0; i < newWallKickPositions.Count; i++)
+            {
+                
+                    newWallKickPositions[i] += wallKicks[wallfloorKickTried];
+                
+
+            }
+
+            if (newWallKickPositions.Any(pos => IsBlocked(pos)))
+            {
+                if(++wallfloorKickTried >= wallKicks.Count)
+                {
+
+                    wallKickVelocity = null;
+                    break;
+                }
+
+              
+            }
+            else
+            {
+                wallKickVelocity = wallKicks[wallfloorKickTried];
+                break;
+            }
+
+                
+        }
+        return wallKickVelocity != null;
+
+
     }
 }
+
+

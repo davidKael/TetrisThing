@@ -25,4 +25,4 @@ MonoBehaviour:
   - {x: 2, y: 0}
   RotationForm2: []
   RotationForm3: []
-  IsRotatable: 1
+  AmountOfRotations: 1
