@@ -9,6 +9,8 @@ public class Box : MonoBehaviour
     internal Vector2Int pos;
     internal static Dictionary<Vector2Int, Box> All = new Dictionary<Vector2Int, Box>();
 
+    public GameObject EffectPrefab;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -17,12 +19,17 @@ public class Box : MonoBehaviour
         All.Add(pos, this);
     }
 
-    internal void ResetBox()
+    internal void ResetBox(bool isRemoved = false)
     {
         IsActive = false;
-        
         sr.enabled = false;
         sr.color = Color.white;
+        if (isRemoved)
+        {
+            Instantiate(EffectPrefab, transform.position, Quaternion.identity);
+        }
+
+        
     }
 
     internal void ActivateBox(Color color)

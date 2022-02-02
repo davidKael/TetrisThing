@@ -13,12 +13,14 @@ public class Controller : MonoBehaviour
     float fallWait = 0.5f;
     float sideWait = 0.5f;
     float rushSpeed = 6;
-    BoxFormation bf;
+    BoxFormation form;
+    FormTemplate nextFromTemplate;
+
 
     bool isRushing = false;
     bool isMovingHorizontal = false;
-
     [SerializeField]
+
     List<FormTemplate> formTemplates = new List<FormTemplate>();
     System.Random random = new System.Random();
 
@@ -43,13 +45,13 @@ public class Controller : MonoBehaviour
                 isMovingHorizontal = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
             }
 
-            if (bf != null)
+            if (form != null)
             {
                 if (Input.GetKeyDown(KeyCode.UpArrow))
                 {
-                    bf.InstaDrop();
+                    form.InstaDrop();
                 }
-                else if (Input.GetKeyDown(KeyCode.Space) && bf.Rotate())
+                else if (Input.GetKeyDown(KeyCode.Space) && form.Rotate())
                 {
 
 
@@ -89,22 +91,31 @@ public class Controller : MonoBehaviour
 
                     Vector2Int velocity = new Vector2Int(horizontalInput, verticalInput);
 
-                    bf.Move(velocity);
+                    form.Move(velocity);
 
                 }
-                if (bf.IsPlaced)
+                if (form.IsPlaced)
                 {
 
-                    ScoreHandler.PlaceForm(bf);
+                    ScoreHandler.PlaceForm(form);
 
-                    bf = null;
+                    form = null;
                     return;
                 }
 
             }
             else
             {
-                bf = new BoxFormation(GetRandomForm());
+                if(nextFromTemplate != null)
+                {
+                    form = new BoxFormation(nextFromTemplate);
+
+                }
+
+
+                nextFromTemplate = GetRandomForm();
+                
+                
             }
         }
        

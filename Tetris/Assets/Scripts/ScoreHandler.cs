@@ -31,7 +31,8 @@ public class ScoreHandler : MonoBehaviour
             {
                 for(int col = 0; col < 10; col++)
                 {
-                    Box.All[new Vector2Int(col, rows[row])].ResetBox();
+
+                    Box.All[new Vector2Int(col, rows[row])].ResetBox(true);
                 }
                 if(rows[row] < lowestRow)
                 {
