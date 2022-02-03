@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: T
   m_EditorClassIdentifier: 
   Color: {r: 0.7748122, g: 0, b: 1, a: 1}
-  FormationPositions:
+  BasePositions:
   - {x: -1, y: 0}
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   - {x: 0, y: 1}
-  RotationForm1:
-  - {x: 1, y: 0}
+  RotationPositions1:
   - {x: 0, y: 1}
   - {x: 0, y: 0}
   - {x: 0, y: -1}
-  RotationForm2:
+  - {x: 1, y: 0}
+  RotationPositions2:
   - {x: -1, y: 0}
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   - {x: 0, y: -1}
-  RotationForm3:
+  RotationPositions3:
   - {x: -1, y: 0}
   - {x: 0, y: 1}
   - {x: 0, y: 0}
