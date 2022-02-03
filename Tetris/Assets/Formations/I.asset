@@ -14,15 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Color: {r: 0, g: 0.8298557, b: 1, a: 1}
   BasePositions:
-  - {x: 0, y: -1}
-  - {x: 0, y: 0}
-  - {x: 0, y: 1}
   - {x: 0, y: 2}
+  - {x: 0, y: 1}
+  - {x: 0, y: 0}
+  - {x: 0, y: -1}
   RotationPositions1:
   - {x: -1, y: 0}
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   - {x: 2, y: 0}
-  RotationPositions2: []
-  RotationPositions3: []
-  AmountOfRotations: 1
+  RotationPositions2:
+  - {x: 1, y: 2}
+  - {x: 1, y: 1}
+  - {x: 1, y: 0}
+  - {x: 1, y: -1}
+  RotationPositions3:
+  - {x: -1, y: 0}
+  - {x: 0, y: 0}
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  AmountOfRotations: 3

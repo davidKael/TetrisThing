@@ -23,6 +23,14 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: -1}
-  RotationPositions2: []
-  RotationPositions3: []
-  AmountOfRotations: 1
+  RotationPositions2:
+  - {x: 0, y: 1}
+  - {x: 1, y: 1}
+  - {x: 1, y: 0}
+  - {x: 2, y: 0}
+  RotationPositions3:
+  - {x: 1, y: 1}
+  - {x: 1, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: -1}
+  AmountOfRotations: 3
