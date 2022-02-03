@@ -26,7 +26,6 @@ public class ScoreHandler : MonoBehaviour
         {
             int lowestRow = rows[0];
            
-
             for(int row = 0; row < rows.Count; row++)
             {
                 for(int col = 0; col < 10; col++)
@@ -39,7 +38,7 @@ public class ScoreHandler : MonoBehaviour
                     lowestRow = rows[row];
                 }
             }
-            Debug.Log($"You scored on {rows.Count} rows!! ");
+
             Box.MoveDownAll(lowestRow, rows.Count);
             rows.Clear();
         }

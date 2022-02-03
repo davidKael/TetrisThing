@@ -11,7 +11,7 @@ public class BoxFormation
     internal Vector2Int offset = new Vector2Int(4, 21);
     internal bool IsPlaced { get { return _isPlaced; } set { _isPlaced = value; if(_isPlaced) GameState.IsGameOver = IsPlacedOverLimit(); } }
     bool _isPlaced = false;
-    FormTemplate _form;
+    internal FormTemplate Form;
 
     Vector2Int centerPos;
     int rotation = 0;
@@ -30,10 +30,16 @@ public class BoxFormation
 
             new Vector2Int(2, 0),
             new Vector2Int(-2, 0),
-            new Vector2Int(0, 2),
+
+            new Vector2Int(0, -1),
+            new Vector2Int(1, -1),
+            new Vector2Int(-1, -1),
 
             new Vector2Int(2, 1),
             new Vector2Int(-2, 1),
+
+            new Vector2Int(0, 2),
+
 
 
             new Vector2Int(1, 2),
@@ -45,20 +51,16 @@ public class BoxFormation
 
     internal BoxFormation(FormTemplate form)
     {
-        _form = form;
+        Form = form;
 
-        List<Vector2Int> startPos = new List<Vector2Int>(_form.FormationPositions);
+        List<Vector2Int> startPos = new List<Vector2Int>(Form.BasePositions);
 
         for (int i = 0; i< startPos.Count; i++)
         {
-
-
             startPos[i] += offset;
         }
 
-
         RefreshBoxes(startPos, Vector2Int.zero + offset);
-
     }
 
     internal void InstaDrop()
@@ -104,11 +106,7 @@ public class BoxFormation
                 if (!boxes.ContainsKey(newPos))
                 {
                     boxes.Add(newPos, Box.All[newPos]);
-                    boxes[newPos].ActivateBox(_form.Color);
-
-
-                    
-
+                    boxes[newPos].ActivateBox(Form.Color);
                 }
             }
 
@@ -127,7 +125,7 @@ public class BoxFormation
             {
                 if(!boxes.Keys.Any(pos => pos == ghosts[i]))
                 {
-                    Box.All[ghosts[i]].TurnGhost(_form.Color);
+                    Box.All[ghosts[i]].TurnGhost(Form.Color);
                 }
                 
             }
@@ -141,8 +139,6 @@ public class BoxFormation
     List<Vector2Int> GetGhostPositions()
     {
         List<Vector2Int> ghostPositions = new List<Vector2Int>(boxes.Keys);
-
-        
 
         while (true)
         {
@@ -209,12 +205,7 @@ public class BoxFormation
                 RefreshBoxes(nextPositions, newCenter);
             }
 
-
         }
-
-
-
-
     }
 
     bool IsBlockedOnHorizontal(int horizontalVel)
@@ -245,62 +236,45 @@ public class BoxFormation
 
     internal bool Rotate()
     {
-        List<Vector2Int> wantedPositions = new List<Vector2Int>();
-        
+        List<Vector2Int> wantedPositions = new List<Vector2Int>();       
 
-        if (_form.IsRotatable())
+        if (Form.IsRotatable())
         {
-
-            switch (rotation + 1 > _form.AmountOfRotations ? 0 : rotation + 1)
+            switch (rotation + 1 > Form.AmountOfRotations ? 0 : rotation + 1)
             {
                 case 1:
-                    wantedPositions = new List<Vector2Int>(_form.RotationForm1);
+                    wantedPositions = new List<Vector2Int>(Form.RotationPositions1);
                     break;
                 case 2:
-                    wantedPositions = new List<Vector2Int>(_form.RotationForm2);
+                    wantedPositions = new List<Vector2Int>(Form.RotationPositions2);
                     break;
                 case 3:
-                    wantedPositions = new List<Vector2Int>(_form.RotationForm3);
+                    wantedPositions = new List<Vector2Int>(Form.RotationPositions3);
                     break;
                 default:
-                    wantedPositions = new List<Vector2Int>(_form.FormationPositions);
+                    wantedPositions = new List<Vector2Int>(Form.BasePositions);
                     break;
-
             }
-
 
 
             if (IsRoomForRotation(wantedPositions, out Vector2Int? wallKickVelocity))
             {
-                rotation = rotation + 1 > _form.AmountOfRotations ? 0 : rotation + 1;
+                rotation = rotation + 1 > Form.AmountOfRotations ? 0 : rotation + 1;
 
                 for (int i = 0; i < wantedPositions.Count; i++)
                 {
                     Vector2Int newPos = wantedPositions[i] + centerPos + (Vector2Int)wallKickVelocity;
-
                     wantedPositions[i] = newPos;
-
-
-
                 }
 
                 if (wantedPositions.Count > 0)
                 {
-                   
                     RefreshBoxes(wantedPositions, centerPos + (Vector2Int)wallKickVelocity);
                     return true;
                 }
-
             }
-
-
-            
-
-
         }
-
         return false;
-
     }
 
     bool IsRoomForRotation(List<Vector2Int> orgWantedRotPos, out Vector2Int? wallKickVelocity)
@@ -345,6 +319,19 @@ public class BoxFormation
         return wallKickVelocity != null;
 
 
+    }
+
+    internal void DeleteFormFromGrid()
+    {
+        foreach(Box box in boxes.Values)
+        {
+            box.ResetBox();
+
+        }
+        foreach(Vector2Int ghostPos in ghosts)
+        {
+            Box.All[ghostPos].ResetBox();
+        }
     }
 }
 

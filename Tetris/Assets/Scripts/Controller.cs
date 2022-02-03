@@ -1,130 +1,159 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class Controller : MonoBehaviour
 {
-  
 
- 
-    float fallTimer = 0;
-    float sideTimer = 0;
-    float fallWait = 0.5f;
-    float sideWait = 0.5f;
-    float rushSpeed = 6;
-    BoxFormation form;
-    FormTemplate nextFromTemplate;
+    [SerializeField] private List<FormTemplate> formTemplates = new List<FormTemplate>();
+    [SerializeField] private float _moveDelay = 0.5f;
+    [SerializeField] private float _verticalRushSpeed = 5;
+    [SerializeField] private float _horizontallRushSpeed = 4;
 
+    private float _fallTimer = 0;
+    private float _sideTimer = 0;
+    private BoxFormation _currForm;
+    private FormTemplate _nexFormTemp;
+    private FormTemplate _holdFormTemp;
+    private System.Random random = new System.Random();
 
-    bool isRushing = false;
-    bool isMovingHorizontal = false;
-    [SerializeField]
-
-    List<FormTemplate> formTemplates = new List<FormTemplate>();
-    System.Random random = new System.Random();
-
-
-
+    private bool _isHoldAvailable = true;
 
     private void Update()
     {
         if (!GameState.IsGameOver)
         {
-            int horizontalInput = 0;
-            int verticalInput = 0;
-
-            isRushing = Input.GetKey(KeyCode.DownArrow);
-
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                sideTimer = 0;
-            }
-            else
-            {
-                isMovingHorizontal = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow);
-            }
-
-            if (form != null)
-            {
-                if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    form.InstaDrop();
-                }
-                else if (Input.GetKeyDown(KeyCode.Space) && form.Rotate())
-                {
-
-
-                    return;
-
-                    
-                }
-
-                else
-                {
-
-
-                    if (fallTimer <= 0)
-                    {
-                        verticalInput = -1;
-                        fallTimer = fallWait;
-                    }
-                    else
-                    {
-                        fallTimer -= Time.deltaTime * (isRushing ? rushSpeed : 1);
-                    }
-
-
-                    if (isMovingHorizontal)
-                    {
-                        if (sideTimer <= 0)
-                        {
-                            horizontalInput += Input.GetKey(KeyCode.RightArrow) ? 1 : 0;
-                            horizontalInput += Input.GetKey(KeyCode.LeftArrow) ? -1 : 0;
-                            sideTimer = sideWait;
-                        }
-                        else
-                        {
-                            sideTimer -= Time.deltaTime * rushSpeed;
-                        }
-                    }
-
-                    Vector2Int velocity = new Vector2Int(horizontalInput, verticalInput);
-
-                    form.Move(velocity);
-
-                }
-                if (form.IsPlaced)
-                {
-
-                    ScoreHandler.PlaceForm(form);
-
-                    form = null;
-                    return;
-                }
-
-            }
-            else
-            {
-                if(nextFromTemplate != null)
-                {
-                    form = new BoxFormation(nextFromTemplate);
-
-                }
-
-
-                nextFromTemplate = GetRandomForm();
-                
-                
-            }
+            RunFormControl();
         }
-       
     }
 
-    FormTemplate GetRandomForm()
+    private FormTemplate GetRandomForm()
     {
         return formTemplates[random.Next(0, formTemplates.Count)];
     }
 
+    private void Hold()
+    {
+        FormTemplate temp = _currForm.Form;
+        _currForm.DeleteFormFromGrid();
 
+        if (_holdFormTemp == null)
+        {
+            _currForm = new BoxFormation(_nexFormTemp);
+            _nexFormTemp = GetRandomForm();
+        }
+        else
+        {
+            _currForm = new BoxFormation(_holdFormTemp);
+        }
+
+        _holdFormTemp = temp;
+        _isHoldAvailable = false;
+        _sideTimer = _moveDelay;
+        _fallTimer = _moveDelay;
+    }
+
+    private int GettingHorizontalInput()
+    {
+        int input = (Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0) + (Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0);
+
+        if (input != 0)
+        {
+            _sideTimer = _moveDelay;
+        }
+        else
+        {
+            if (_sideTimer > 0)
+            {
+                _sideTimer -= Time.deltaTime * _horizontallRushSpeed;
+                input = 0;
+            }
+            else
+            {
+                input = (Input.GetKey(KeyCode.RightArrow) && !Input.GetKeyUp(KeyCode.RightArrow) ? 1 : 0) + (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKeyUp(KeyCode.RightArrow) ? -1 : 0);
+                _sideTimer = _moveDelay;
+            }
+        }
+        return input;
+    }
+
+    private int GetVerticalInput()
+    {
+        int output;
+
+        if (_fallTimer <= 0)
+        {
+            output = -1;
+
+            _fallTimer = _moveDelay;
+        }
+        else
+        {
+            _fallTimer -= Time.deltaTime * (Input.GetKey(KeyCode.DownArrow) && !Input.GetKeyUp(KeyCode.DownArrow) ? _verticalRushSpeed : 1);
+            output = 0;
+        }
+
+        return output;
+    }
+
+    private bool GetInstaDropInput()
+    {
+        return Input.GetKeyDown(KeyCode.UpArrow);
+    }
+
+    private bool GetRotationInput()
+    {
+        return Input.GetKeyDown(KeyCode.Space);
+    }
+
+    private bool GetHoldInput()
+    {
+        return Input.GetKeyDown(KeyCode.H);
+    }
+
+    private bool IsFormInPlay()
+    {
+        return _currForm != null;
+    }
+
+    private void RunFormControl()
+    {
+        if (IsFormInPlay())
+        {
+            if (_isHoldAvailable && GetHoldInput())
+            {
+                Hold();
+            }
+            else if (GetInstaDropInput())
+            {
+                _currForm.InstaDrop();
+            }
+            else if (GetRotationInput())
+            {
+                _currForm.Rotate();
+            }
+            else
+            {
+                Vector2Int velocity = new Vector2Int(GettingHorizontalInput(), GetVerticalInput());
+
+                _currForm.Move(velocity);
+            }
+
+            if (_currForm.IsPlaced)
+            {
+                ScoreHandler.PlaceForm(_currForm);
+                _currForm = null;
+            }
+        }
+        else
+        {
+            if (_nexFormTemp != null)
+            {
+                _sideTimer = _moveDelay;
+                _fallTimer = _moveDelay;
+                _currForm = new BoxFormation(_nexFormTemp);
+                _isHoldAvailable = true;
+            }
+            _nexFormTemp = GetRandomForm();
+        }
+    }
 }
