@@ -106,6 +106,7 @@ public class BoxFormation
                 }
             }
 
+
             foreach (Vector2Int ghostpos in ghosts)
             {
                 if (!boxPositions.Any(pos => pos == ghostpos))
@@ -117,14 +118,18 @@ public class BoxFormation
 
             ghosts = new List<Vector2Int>(GetGhostPositions());
 
-            for (int i = 0; i < ghosts.Count; i++)
+            if (_grid.ShowGhosts)
             {
-                if (!boxPositions.Any(pos => pos == ghosts[i]))
+                for (int i = 0; i < ghosts.Count; i++)
                 {
-                    _grid.Boxes[ghosts[i]].TurnGhost(Form.Color);
-                }
+                    if (!boxPositions.Any(pos => pos == ghosts[i]))
+                    {
+                        _grid.Boxes[ghosts[i]].TurnGhost(Form.Color);
+                    }
 
+                }
             }
+           
 
             centerPos = nexRotCenter;
 

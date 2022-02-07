@@ -18,8 +18,8 @@ public class Controller : MonoBehaviour
 
     private bool _isHoldAvailable = true;
 
-    
     [SerializeField] PlayerGrid _grid;
+    [SerializeField] PlayerGrid _nextGrid;
 
     private void Update()
     {
@@ -42,6 +42,8 @@ public class Controller : MonoBehaviour
         if (_holdFormTemp == null)
         {
             _currForm = new BoxFormation(_nexFormTemp, _grid);
+
+
             _nexFormTemp = GetRandomForm();
         }
         else
@@ -159,4 +161,5 @@ public class Controller : MonoBehaviour
             _nexFormTemp = GetRandomForm();
         }
     }
+
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerGrid : MonoBehaviour
 {
     internal Dictionary<Vector2Int, Box> Boxes = new Dictionary<Vector2Int, Box>();
+    [SerializeField]internal bool ShowGhosts = true;
 
     private void Start()
     {
