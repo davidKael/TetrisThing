@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour
+public class PlayerGrid : MonoBehaviour
 {
     internal Dictionary<Vector2Int, Box> Boxes = new Dictionary<Vector2Int, Box>();
 

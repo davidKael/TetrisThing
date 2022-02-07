@@ -6,7 +6,7 @@ using System.Linq;
 public class ScoreHandler
 {
 
-    static internal void PlaceForm(BoxFormation bf, Grid grid)
+    static internal void PlaceForm(BoxFormation bf, PlayerGrid grid)
     {
         List<int> rows = new List<int>();
 
@@ -23,28 +23,6 @@ public class ScoreHandler
         }
 
         rows.Sort();
-        /*
-        if(rows.Count > 0)
-        {
-            int lowestRow = rows[0];
-           
-            for(int row = 0; row < rows.Count; row++)
-            {
-                for(int col = 0; col < 10; col++)
-                {
-
-                    grid.Boxes[new Vector2Int(col, rows[row])].ResetBox(true);
-                }
-                if(rows[row] < lowestRow)
-                {
-                    lowestRow = rows[row];
-                }
-            }
-
-            grid.MoveDownAll(lowestRow, rows.Count);
-            rows.Clear();
-        }
-        */
 
         for (int row = 0; row < rows.Count; row++)
         {

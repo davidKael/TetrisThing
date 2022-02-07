@@ -13,7 +13,7 @@ public class BoxFormation
     internal bool IsPlaced { get { return _isPlaced; } set { _isPlaced = value; if (_isPlaced) GameState.IsGameOver = IsPlacedOverLimit(); } }
     bool _isPlaced = false;
 
-    Grid _grid;
+    PlayerGrid _grid;
 
     internal List<Vector2Int> ghosts = new List<Vector2Int>();
     Vector2Int centerPos;
@@ -45,7 +45,7 @@ public class BoxFormation
         new Vector2Int(-2, 2),
     };
 
-    internal BoxFormation(FormTemplate form, Grid grid)
+    internal BoxFormation(FormTemplate form, PlayerGrid grid)
     {
         Form = form;
         _grid = grid;

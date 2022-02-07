@@ -19,7 +19,7 @@ public class Controller : MonoBehaviour
     private bool _isHoldAvailable = true;
 
     
-    [SerializeField] Grid _grid;
+    [SerializeField] PlayerGrid _grid;
 
     private void Update()
     {

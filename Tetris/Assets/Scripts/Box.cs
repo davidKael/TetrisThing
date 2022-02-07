@@ -7,9 +7,10 @@ public class Box : MonoBehaviour
     internal bool IsActive = false;
     SpriteRenderer sr;
     internal Vector2Int pos;
-    public Grid grid;
+    public PlayerGrid grid;
 
     public GameObject EffectPrefab;
+    [SerializeField] ParticleSystem ps;
 
     private void Awake()
     {
@@ -27,7 +28,8 @@ public class Box : MonoBehaviour
         if (isRemoved)
         {
 
-           // Instantiate(EffectPrefab, transform.position, Quaternion.identity);
+            // Instantiate(EffectPrefab, transform.position, Quaternion.identity);
+            ps.Play();
         } 
 
     }
