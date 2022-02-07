@@ -18,6 +18,9 @@ public class Controller : MonoBehaviour
 
     private bool _isHoldAvailable = true;
 
+    
+    [SerializeField] Grid _grid;
+
     private void Update()
     {
         if (!GameState.IsGameOver)
@@ -34,16 +37,16 @@ public class Controller : MonoBehaviour
     private void Hold()
     {
         FormTemplate temp = _currForm.Form;
-        _currForm.DeleteFormFromGrid();
+        _grid.DeleteFormFromGrid(_currForm);
 
         if (_holdFormTemp == null)
         {
-            _currForm = new BoxFormation(_nexFormTemp);
+            _currForm = new BoxFormation(_nexFormTemp, _grid);
             _nexFormTemp = GetRandomForm();
         }
         else
         {
-            _currForm = new BoxFormation(_holdFormTemp);
+            _currForm = new BoxFormation(_holdFormTemp, _grid);
         }
 
         _holdFormTemp = temp;
@@ -140,7 +143,7 @@ public class Controller : MonoBehaviour
 
             if (_currForm.IsPlaced)
             {
-                ScoreHandler.PlaceForm(_currForm);
+                ScoreHandler.PlaceForm(_currForm, _grid);
                 _currForm = null;
             }
         }
@@ -150,7 +153,7 @@ public class Controller : MonoBehaviour
             {
                 _sideTimer = _moveDelay;
                 _fallTimer = _moveDelay;
-                _currForm = new BoxFormation(_nexFormTemp);
+                _currForm = new BoxFormation(_nexFormTemp, _grid);
                 _isHoldAvailable = true;
             }
             _nexFormTemp = GetRandomForm();

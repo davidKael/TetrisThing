@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class ScoreHandler : MonoBehaviour
+public class ScoreHandler
 {
 
-    static internal void PlaceForm(BoxFormation bf)
+    static internal void PlaceForm(BoxFormation bf, Grid grid)
     {
         List<int> rows = new List<int>();
 
-        foreach(Box newBox in bf.boxes.Values)
+        foreach(Vector2Int placedPos in bf.boxPositions)
         {
-            if(!Box.All.Values.Any(box => !box.IsActive && box.pos.y == newBox.pos.y))
+            if(!grid.Boxes.Values.Any(box => !box.IsActive && box.pos.y == placedPos.y))
             {
-                if (!rows.Contains(newBox.pos.y))
+                if (!rows.Contains(placedPos.y))
                 {
-                    rows.Add(newBox.pos.y);
+                    rows.Add(placedPos.y);
                     
                 }
             }
@@ -33,7 +33,7 @@ public class ScoreHandler : MonoBehaviour
                 for(int col = 0; col < 10; col++)
                 {
 
-                    Box.All[new Vector2Int(col, rows[row])].ResetBox(true);
+                    grid.Boxes[new Vector2Int(col, rows[row])].ResetBox(true);
                 }
                 if(rows[row] < lowestRow)
                 {
@@ -41,7 +41,7 @@ public class ScoreHandler : MonoBehaviour
                 }
             }
 
-            Box.MoveDownAll(lowestRow, rows.Count);
+            grid.MoveDownAll(lowestRow, rows.Count);
             rows.Clear();
         }
         */

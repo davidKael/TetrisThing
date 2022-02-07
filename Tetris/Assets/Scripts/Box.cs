@@ -7,7 +7,7 @@ public class Box : MonoBehaviour
     internal bool IsActive = false;
     SpriteRenderer sr;
     internal Vector2Int pos;
-    internal static Dictionary<Vector2Int, Box> All = new Dictionary<Vector2Int, Box>();
+    public Grid grid;
 
     public GameObject EffectPrefab;
 
@@ -16,7 +16,7 @@ public class Box : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         ResetBox();
         pos = new Vector2Int(Mathf.RoundToInt(transform.localPosition.x), Mathf.RoundToInt(transform.localPosition.y));
-        All.Add(pos, this);
+        
     }
 
     internal void ResetBox(bool isRemoved = false)
@@ -26,15 +26,10 @@ public class Box : MonoBehaviour
         sr.color = Color.white;
         if (isRemoved)
         {
-<<<<<<< Updated upstream
-            Instantiate(EffectPrefab, transform.position, Quaternion.identity);
-        }
 
-        
-=======
            // Instantiate(EffectPrefab, transform.position, Quaternion.identity);
         } 
->>>>>>> Stashed changes
+
     }
 
     internal void ActivateBox(Color color)
@@ -57,25 +52,14 @@ public class Box : MonoBehaviour
         sr.enabled = true;
     }
 
-    void MoveDown(int rows)
+    internal void MoveDown(int rows)
     {
         if (IsActive)
         {
-            Box.All[new Vector2Int(pos.x, pos.y - rows)].ActivateBox(sr.color);
+            grid.Boxes[new Vector2Int(pos.x, pos.y - rows)].ActivateBox(sr.color);
             ResetBox();
         }
         
     }
 
-    internal static void MoveDownAll(int lowestRow, int amount)
-    {
-        for (int row = lowestRow; row < 20; row++)
-        {
-            for (int col = 0; col < 10; col++)
-            {
-               // Debug.Log($"row={row},col={col}");
-                All[new Vector2Int(col, row)].MoveDown(amount);
-            }
-        }
-    }
 }
