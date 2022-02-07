@@ -26,10 +26,15 @@ public class Box : MonoBehaviour
         sr.color = Color.white;
         if (isRemoved)
         {
+<<<<<<< Updated upstream
             Instantiate(EffectPrefab, transform.position, Quaternion.identity);
         }
 
         
+=======
+           // Instantiate(EffectPrefab, transform.position, Quaternion.identity);
+        } 
+>>>>>>> Stashed changes
     }
 
     internal void ActivateBox(Color color)
