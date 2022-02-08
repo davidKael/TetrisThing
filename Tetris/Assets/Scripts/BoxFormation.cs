@@ -50,13 +50,14 @@ public class BoxFormation
         Form = form;
         _grid = grid;
 
-        List<Vector2Int> startPos = new List<Vector2Int>(Form.BasePositions);
-
+        //List<Vector2Int> startPos = new List<Vector2Int>(Form.BasePositions);
+        /*
         for (int i = 0; i < startPos.Count; i++)
         {
             startPos[i] += startOffset;
-        }
+        }*/
 
+        List<Vector2Int> startPos = Form.BasePositions.ConvertAll(pos =>  pos += startOffset);
         RefreshBoxes(startPos, Vector2Int.zero + startOffset);
     }
 
@@ -72,40 +73,22 @@ public class BoxFormation
         {
             if (boxPositions.Count > 0)
             {
-                List<Vector2Int> removables = new List<Vector2Int>();
-
-                foreach (Vector2Int pos in boxPositions)
+                //finds and removes all unwanted positions
+                boxPositions.Where(pos => !newPositions.Contains(pos)).ToList().ForEach(unwanted =>
                 {
+                    _grid.Boxes[unwanted].ResetBox();
+                    boxPositions.Remove(unwanted);
+                });
 
-                    if (!newPositions.Contains(pos))
-                    {
-
-                        removables.Add(pos);
-
-                    }
-
-                }
-
-                if (removables.Count > 0)
-                {
-                    foreach (Vector2Int removable in removables)
-                    {
-                        _grid.Boxes[removable].ResetBox();
-                        boxPositions.Remove(removable);
-                    }
-                }
             }
 
-            foreach (Vector2Int newPos in newPositions)
+            //Actives all new positions and adds them to boxPositions
+            newPositions.Where(pos => !boxPositions.Contains(pos)).ToList().ForEach(newPos =>
             {
-
-                if (!boxPositions.Contains(newPos))
-                {
-                    boxPositions.Add(newPos);
-                    _grid.Boxes[newPos].ActivateBox(Form.Color);
-                }
-            }
-
+                boxPositions.Add(newPos);
+                _grid.Boxes[newPos].ActivateBox(Form.Color);
+            });
+    
 
             foreach (Vector2Int ghostpos in ghosts)
             {
