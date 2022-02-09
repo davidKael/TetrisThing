@@ -36,15 +36,8 @@ public class PlayerGrid : MonoBehaviour
 
     internal void DeleteFormFromGrid(BoxFormation boxFormation)
     {
-        foreach (Vector2Int pos in boxFormation.boxPositions)
-        {
-            Boxes[pos].ResetBox();
-
-        }
-        foreach (Vector2Int ghostPos in boxFormation.ghosts)
-        {
-            Boxes[ghostPos].ResetBox();
-        }
+        boxFormation.boxPositions.ForEach(pos => Boxes[pos].ResetBox());
+        boxFormation.ghosts.ForEach(ghostPos => Boxes[ghostPos].ResetBox());
     }
 
 
