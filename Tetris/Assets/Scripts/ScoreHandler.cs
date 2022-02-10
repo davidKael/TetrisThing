@@ -5,14 +5,19 @@ using System.Linq;
 
 public class ScoreHandler
 {
-
-    static internal void PlaceForm(BoxFormation bf, PlayerGrid grid)
+    #region Methods
+    /// <summary>
+    /// calculates which rows got full after a formation was placed, then updates the whole grid
+    /// </summary>
+    /// <param name="form">form that was placed</param>
+    /// <param name="grid">on which grid it was placed</param>
+    static internal void PlaceForm(BoxFormation form, PlayerGrid grid)
     {
         List<int> rows = new List<int>();
 
-        foreach(Vector2Int placedPos in bf.boxPositions)
+        foreach (Vector2Int placedPos in form.Positions)
         {
-            if(!grid.Boxes.Values.Any(box => !box.IsActive && box.pos.y == placedPos.y))
+            if(!grid.Boxes.Values.Any(box => !box.IsActive && box.Position.y == placedPos.y))
             {
                 if (!rows.Contains(placedPos.y))
                 {
@@ -42,5 +47,5 @@ public class ScoreHandler
         }
 
     }
-
+    #endregion
 }

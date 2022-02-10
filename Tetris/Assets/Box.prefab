@@ -96,9 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e61aa91777352418c5a712b71887af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 0}
-  EffectPrefab: {fileID: 850554381594438267, guid: 928d263e3bdf2114cb9054690bf3d840, type: 3}
-  ps: {fileID: 7343375238531356358}
+  _particle: {fileID: 7343375238531356358}
 --- !u!1001 &9000478452527552655
 PrefabInstance:
   m_ObjectHideFlags: 0

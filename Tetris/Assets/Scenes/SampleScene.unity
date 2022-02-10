@@ -11299,7 +11299,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1fb0e59fa6e27647847fd6a9faf24dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowGhosts: 1
 --- !u!1001 &1635313505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14035,7 +14034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4586e88130568945ac37bede1835af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  formTemplates:
+  _formTemplates:
   - {fileID: 11400000, guid: cb901d884e5888d44a6cc1d2dc2aac71, type: 2}
   - {fileID: 11400000, guid: ac64a1ca998ac6d41a0974887c8a4356, type: 2}
   - {fileID: 11400000, guid: 8084f47e8cacfb74c9c9153bc318a031, type: 2}
@@ -14043,11 +14042,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4a3875a7b10e2c2458525f09eb7510f4, type: 2}
   - {fileID: 11400000, guid: 37f0c0db1a87d7c45a18828f55aa9bb3, type: 2}
   - {fileID: 11400000, guid: 7555a16dbc09eea4483e381530c9ae26, type: 2}
-  _moveDelay: 0.5
-  _verticalRushSpeed: 6
-  _horizontallRushSpeed: 4
   _grid: {fileID: 1631046581}
   _nextGrid: {fileID: 0}
+  _moveTime: 0.5
+  _verticalRushSpeed: 6
+  _horizontallRushSpeed: 4
 --- !u!4 &1970608974
 Transform:
   m_ObjectHideFlags: 0

@@ -16,7 +16,4 @@ public class FormTemplate : ScriptableObject
     {
         return AmountOfRotations > 0;
     }
-
-
- 
 }

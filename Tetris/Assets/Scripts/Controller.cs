@@ -3,24 +3,28 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
-
-    [SerializeField] private List<FormTemplate> formTemplates = new List<FormTemplate>();
-    [SerializeField] private float _moveDelay = 0.5f;
-    [SerializeField] private float _verticalRushSpeed = 5;
-    [SerializeField] private float _horizontallRushSpeed = 4;
-
-    private float _fallTimer = 0;
-    private float _sideTimer = 0;
-    private BoxFormation _currForm;
-    private FormTemplate _nexFormTemp;
-    private FormTemplate _holdFormTemp;
-    private System.Random random = new System.Random();
-
-    private bool _isHoldAvailable = true;
-
+    #region FieldsInEditor
+    [Header("Parts")]
+    [SerializeField] List<FormTemplate> _formTemplates = new List<FormTemplate>();
     [SerializeField] PlayerGrid _grid;
     [SerializeField] PlayerGrid _nextGrid;
+    [Header("Settings")]
+    [SerializeField] float _moveTime = 0.5f;
+    [SerializeField] float _verticalRushSpeed = 5;
+    [SerializeField] float _horizontallRushSpeed = 4;
+    #endregion
 
+    #region Fields
+    float _fallTimer = 0;
+    float _sideTimer = 0;
+    BoxFormation _currForm;
+    FormTemplate _nexFormTemp;
+    FormTemplate _holdFormTemp;
+    bool _isHoldAvailable = true;
+    System.Random random = new System.Random();
+    #endregion
+
+    #region UnityMethods
     private void Update()
     {
         if (!GameState.IsGameOver)
@@ -28,13 +32,22 @@ public class Controller : MonoBehaviour
             RunFormControl();
         }
     }
+    #endregion
 
-    private FormTemplate GetRandomForm()
+    #region Methods
+    /// <summary>
+    /// Returns a random FormTemplate
+    /// </summary>
+    /// <returns></returns>
+    FormTemplate GetRandomForm()
     {
-        return formTemplates[random.Next(0, formTemplates.Count)];
+        return _formTemplates[random.Next(0, _formTemplates.Count)];
     }
 
-    private void Hold()
+    /// <summary>
+    /// Called to save current form and get next one or the last holded form
+    /// </summary>
+    void Hold()
     {
         FormTemplate temp = _currForm.Form;
         _grid.DeleteFormFromGrid(_currForm);
@@ -42,8 +55,6 @@ public class Controller : MonoBehaviour
         if (_holdFormTemp == null)
         {
             _currForm = new BoxFormation(_nexFormTemp, _grid);
-
-
             _nexFormTemp = GetRandomForm();
         }
         else
@@ -53,17 +64,21 @@ public class Controller : MonoBehaviour
 
         _holdFormTemp = temp;
         _isHoldAvailable = false;
-        _sideTimer = _moveDelay;
-        _fallTimer = _moveDelay;
+        _sideTimer = _moveTime;
+        _fallTimer = _moveTime;
     }
 
-    private int GettingHorizontalInput()
+    /// <summary>
+    /// Returns input from player on the x-axis
+    /// </summary>
+    /// <returns></returns>
+    int GettingHorizontalInput()
     {
         int input = (Input.GetKeyDown(KeyCode.RightArrow) ? 1 : 0) + (Input.GetKeyDown(KeyCode.LeftArrow) ? -1 : 0);
 
         if (input != 0)
         {
-            _sideTimer = _moveDelay;
+            _sideTimer = _moveTime;
         }
         else
         {
@@ -75,13 +90,17 @@ public class Controller : MonoBehaviour
             else
             {
                 input = (Input.GetKey(KeyCode.RightArrow) && !Input.GetKeyUp(KeyCode.RightArrow) ? 1 : 0) + (Input.GetKey(KeyCode.LeftArrow) && !Input.GetKeyUp(KeyCode.RightArrow) ? -1 : 0);
-                _sideTimer = _moveDelay;
+                _sideTimer = _moveTime;
             }
         }
         return input;
     }
 
-    private int GetVerticalInput()
+    /// <summary>
+    /// Returns input from player on the Y-axis
+    /// </summary>
+    /// <returns></returns>
+    int GetVerticalInput()
     {
         int output;
 
@@ -89,7 +108,7 @@ public class Controller : MonoBehaviour
         {
             output = -1;
 
-            _fallTimer = _moveDelay;
+            _fallTimer = _moveTime;
         }
         else
         {
@@ -100,27 +119,46 @@ public class Controller : MonoBehaviour
         return output;
     }
 
-    private bool GetInstaDropInput()
+    /// <summary>
+    /// Checks if player pressed the "InstaDrop"-button this frame
+    /// </summary>
+    /// <returns></returns>
+    bool GetInstaDropInput()
     {
         return Input.GetKeyDown(KeyCode.UpArrow);
     }
 
-    private bool GetRotationInput()
+    /// <summary>
+    /// Checks if player is pressed the "Rotation"-button this frame
+    /// </summary>
+    /// <returns></returns>
+    bool GetRotationInput()
     {
         return Input.GetKeyDown(KeyCode.Space);
     }
 
-    private bool GetHoldInput()
+    /// <summary>
+    /// Checks if player pressed the "hold"-button this frame
+    /// </summary>
+    /// <returns></returns>
+    bool GetHoldInput()
     {
         return Input.GetKeyDown(KeyCode.H);
     }
 
-    private bool IsFormInPlay()
+    /// <summary>
+    /// Checks if there is an active form in player-control
+    /// </summary>
+    /// <returns></returns>
+    bool IsFormInPlay()
     {
         return _currForm != null;
     }
 
-    private void RunFormControl()
+    /// <summary>
+    /// Flow of a player run
+    /// </summary>
+    void RunFormControl()
     {
         if (IsFormInPlay())
         {
@@ -139,7 +177,6 @@ public class Controller : MonoBehaviour
             else
             {
                 Vector2Int velocity = new Vector2Int(GettingHorizontalInput(), GetVerticalInput());
-
                 _currForm.Move(velocity);
             }
 
@@ -153,13 +190,13 @@ public class Controller : MonoBehaviour
         {
             if (_nexFormTemp != null)
             {
-                _sideTimer = _moveDelay;
-                _fallTimer = _moveDelay;
+                _sideTimer = _moveTime;
+                _fallTimer = _moveTime;
                 _currForm = new BoxFormation(_nexFormTemp, _grid);
                 _isHoldAvailable = true;
             }
             _nexFormTemp = GetRandomForm();
         }
     }
-
+    #endregion
 }

@@ -4,41 +4,56 @@ using UnityEngine;
 
 public class PlayerGrid : MonoBehaviour
 {
+    #region Properties
     internal Dictionary<Vector2Int, Box> Boxes = new Dictionary<Vector2Int, Box>();
-    [SerializeField]internal bool ShowGhosts = true;
+    internal bool ShowGhosts { get; private set; } = true;
+    #endregion
 
+    #region Unity Methods
     private void Start()
     {
         SetUpBoxes();
     }
+    #endregion
 
-    void SetUpBoxes()
-    {
-        foreach(Box box in transform.GetComponentsInChildren<Box>())
-        {
-            Boxes.Add(box.pos, box);
-            box.grid = this;
-        }
-    }
-
-
+    #region Methods
+    /// <summary>
+    /// called to move down all active boxes on grid
+    /// </summary>
+    /// <param name="lowestRow">lowest row to move down</param>
+    /// <param name="amount">how many rows to move</param>
     internal void MoveDownAll(int lowestRow, int amount)
     {
         for (int row = lowestRow; row < 20; row++)
         {
             for (int col = 0; col < 10; col++)
             {
-                // Debug.Log($"row={row},col={col}");
                 Boxes[new Vector2Int(col, row)].MoveDown(amount);
             }
         }
     }
-
+    
+    /// <summary>
+    /// Clear grid from given Formation
+    /// </summary>
+    /// <param name="boxFormation"></param>
     internal void DeleteFormFromGrid(BoxFormation boxFormation)
     {
-        boxFormation.boxPositions.ForEach(pos => Boxes[pos].ResetBox());
+        boxFormation.Positions.ForEach(pos => Boxes[pos].ResetBox());
         boxFormation.ghosts.ForEach(ghostPos => Boxes[ghostPos].ResetBox());
     }
-
+    
+    /// <summary>
+    /// Gets all boxes and store them in list
+    /// </summary>
+    void SetUpBoxes()
+    {
+        foreach (Box box in transform.GetComponentsInChildren<Box>())
+        {
+            Boxes.Add(box.Position, box);
+            box.Grid = this;
+        }            
+    }
+    #endregion
 
 }
