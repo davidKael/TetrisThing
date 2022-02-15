@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class PlayerGrid : MonoBehaviour
 {
-    #region Properties
+    #region Fields
     internal Dictionary<Vector2Int, Box> Boxes = new Dictionary<Vector2Int, Box>();
-    internal bool ShowGhosts { get; private set; } = true;
+    [SerializeField]internal bool ShowGhosts = true;
     #endregion
 
     #region Unity Methods
@@ -46,13 +46,21 @@ public class PlayerGrid : MonoBehaviour
     /// <summary>
     /// Gets all boxes and store them in list
     /// </summary>
-    void SetUpBoxes()
+    protected void SetUpBoxes()
     {
         foreach (Box box in transform.GetComponentsInChildren<Box>())
         {
             Boxes.Add(box.Position, box);
             box.Grid = this;
         }            
+    }
+
+    internal void ResetGrid()
+    {
+        foreach(Box box in Boxes.Values)
+        {
+            box.ResetBox();
+        }
     }
     #endregion
 

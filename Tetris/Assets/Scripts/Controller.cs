@@ -7,7 +7,8 @@ public class Controller : MonoBehaviour
     [Header("Parts")]
     [SerializeField] List<FormTemplate> _formTemplates = new List<FormTemplate>();
     [SerializeField] PlayerGrid _grid;
-    [SerializeField] PlayerGrid _nextGrid;
+    [SerializeField] DisplayGrid _nextGrid;
+    [SerializeField] DisplayGrid _holdGrid;
     [Header("Settings")]
     [SerializeField] float _moveTime = 0.5f;
     [SerializeField] float _verticalRushSpeed = 5;
@@ -18,7 +19,7 @@ public class Controller : MonoBehaviour
     float _fallTimer = 0;
     float _sideTimer = 0;
     BoxFormation _currForm;
-    FormTemplate _nexFormTemp;
+    FormTemplate _nextFromTemp;
     FormTemplate _holdFormTemp;
     bool _isHoldAvailable = true;
     System.Random random = new System.Random();
@@ -54,15 +55,15 @@ public class Controller : MonoBehaviour
 
         if (_holdFormTemp == null)
         {
-            _currForm = new BoxFormation(_nexFormTemp, _grid);
-            _nexFormTemp = GetRandomForm();
+            _currForm = new BoxFormation(_nextFromTemp, _grid);
+            _nextGrid.DisplayForm(_nextFromTemp = GetRandomForm());
         }
         else
         {
             _currForm = new BoxFormation(_holdFormTemp, _grid);
         }
 
-        _holdFormTemp = temp;
+        _holdGrid.DisplayForm(_holdFormTemp = temp);
         _isHoldAvailable = false;
         _sideTimer = _moveTime;
         _fallTimer = _moveTime;
@@ -169,6 +170,7 @@ public class Controller : MonoBehaviour
             else if (GetInstaDropInput())
             {
                 _currForm.InstaDrop();
+
             }
             else if (GetRotationInput())
             {
@@ -188,14 +190,15 @@ public class Controller : MonoBehaviour
         }
         else
         {
-            if (_nexFormTemp != null)
+            if (_nextFromTemp != null)
             {
                 _sideTimer = _moveTime;
                 _fallTimer = _moveTime;
-                _currForm = new BoxFormation(_nexFormTemp, _grid);
+                _currForm = new BoxFormation(_nextFromTemp, _grid);
                 _isHoldAvailable = true;
             }
-            _nexFormTemp = GetRandomForm();
+
+            _nextGrid.DisplayForm(_nextFromTemp = GetRandomForm());
         }
     }
     #endregion
