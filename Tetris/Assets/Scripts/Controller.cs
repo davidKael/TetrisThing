@@ -7,7 +7,7 @@ public class Controller : MonoBehaviour
     [Header("Parts")]
     [SerializeField] List<FormTemplate> _formTemplates = new List<FormTemplate>();
     [SerializeField] PlayerGrid _grid;
-    [SerializeField] DisplayGrid _nextGrid;
+    [SerializeField] List<DisplayGrid> _nextGrids = new List<DisplayGrid>();
     [SerializeField] DisplayGrid _holdGrid;
     [Header("Settings")]
     [SerializeField] float _moveTime = 0.5f;
@@ -19,7 +19,7 @@ public class Controller : MonoBehaviour
     float _fallTimer = 0;
     float _sideTimer = 0;
     BoxFormation _currForm;
-    FormTemplate _nextFromTemp;
+    List<FormTemplate> _nextFormTemps = new List<FormTemplate>();
     FormTemplate _holdFormTemp;
     bool _isHoldAvailable = true;
     System.Random random = new System.Random();
@@ -55,8 +55,8 @@ public class Controller : MonoBehaviour
 
         if (_holdFormTemp == null)
         {
-            _currForm = new BoxFormation(_nextFromTemp, _grid);
-            _nextGrid.DisplayForm(_nextFromTemp = GetRandomForm());
+            _currForm = new BoxFormation(GetNextForm(), _grid);
+            
         }
         else
         {
@@ -64,6 +64,7 @@ public class Controller : MonoBehaviour
         }
 
         _holdGrid.DisplayForm(_holdFormTemp = temp);
+
         _isHoldAvailable = false;
         _sideTimer = _moveTime;
         _fallTimer = _moveTime;
@@ -190,16 +191,43 @@ public class Controller : MonoBehaviour
         }
         else
         {
-            if (_nextFromTemp != null)
-            {
-                _sideTimer = _moveTime;
-                _fallTimer = _moveTime;
-                _currForm = new BoxFormation(_nextFromTemp, _grid);
-                _isHoldAvailable = true;
-            }
+            if (_nextFormTemps.Count  < 1) FillNexts();
+           
+            _sideTimer = _moveTime;
+            _fallTimer = _moveTime;
+            _currForm = new BoxFormation(GetNextForm(), _grid);
+            _isHoldAvailable = true;
 
-            _nextGrid.DisplayForm(_nextFromTemp = GetRandomForm());
+            
         }
     }
+
+    FormTemplate GetNextForm()
+    {
+        FormTemplate output = _nextFormTemps[0];
+        _nextFormTemps.RemoveAt(0);
+        _nextFormTemps.Add(GetRandomForm());
+        UpdateNextGrids();
+        return output;
+
+    }
+
+    void FillNexts()
+    {
+        for(int i = 0; i < _nextGrids.Count; i++)
+        {
+            _nextFormTemps.Add(GetRandomForm());
+        }
+        UpdateNextGrids();
+    }
+
+    void UpdateNextGrids()
+    {
+        for(int i = 0; i < _nextGrids.Count; i++)
+        {
+            _nextGrids[i].DisplayForm(_nextFormTemps[i]);
+        }
+    }
+
     #endregion
 }
