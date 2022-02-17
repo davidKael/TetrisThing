@@ -14,7 +14,7 @@ public class Box : MonoBehaviour
     #endregion
 
     #region Fields
-    internal PlayerGrid Grid;
+    internal GridBase Grid;
     SpriteRenderer sr;
     #endregion
 

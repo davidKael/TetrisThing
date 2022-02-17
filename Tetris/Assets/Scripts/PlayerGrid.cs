@@ -1,20 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class PlayerGrid : MonoBehaviour
+public class PlayerGrid : GridBase
 {
-    #region Fields
-    internal Dictionary<Vector2Int, Box> Boxes = new Dictionary<Vector2Int, Box>();
-    [SerializeField]internal bool ShowGhosts = true;
-    #endregion
 
-    #region Unity Methods
-    private void Start()
-    {
-        SetUpBoxes();
-    }
-    #endregion
+    [SerializeField] int _score;
+    [SerializeField] TextMeshProUGUI _scoreText;
 
     #region Methods
     /// <summary>
@@ -43,25 +36,12 @@ public class PlayerGrid : MonoBehaviour
         boxFormation.ghosts.ForEach(ghostPos => Boxes[ghostPos].ResetBox());
     }
     
-    /// <summary>
-    /// Gets all boxes and store them in list
-    /// </summary>
-    protected void SetUpBoxes()
+    internal void AddToScore(int addedScore)
     {
-        foreach (Box box in transform.GetComponentsInChildren<Box>())
-        {
-            Boxes.Add(box.Position, box);
-            box.Grid = this;
-        }            
+        _score += addedScore;
+        _scoreText.text = _score.ToString();
     }
 
-    internal void ResetGrid()
-    {
-        foreach(Box box in Boxes.Values)
-        {
-            box.ResetBox();
-        }
-    }
     #endregion
 
 }
