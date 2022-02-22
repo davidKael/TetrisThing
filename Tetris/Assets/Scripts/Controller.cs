@@ -5,6 +5,7 @@ public class Controller : MonoBehaviour
 {
     #region FieldsInEditor
     [Header("Parts")]
+    [SerializeField] PlayerState _playerState;
     [SerializeField] List<FormTemplate> _formTemplates = new List<FormTemplate>();
     [SerializeField] PlayerGrid _grid;
     [SerializeField] List<DisplayGrid> _nextGrids = new List<DisplayGrid>();
@@ -28,7 +29,7 @@ public class Controller : MonoBehaviour
     #region UnityMethods
     private void Update()
     {
-        if (!GameState.IsGameOver)
+        if (_playerState.IsPlayerInControl())
         {
             RunFormControl();
         }
@@ -160,7 +161,7 @@ public class Controller : MonoBehaviour
     /// <summary>
     /// Flow of a player run
     /// </summary>
-    void RunFormControl()
+    internal void RunFormControl()
     {
         if (IsFormInPlay())
         {
@@ -185,7 +186,6 @@ public class Controller : MonoBehaviour
 
             if (_currForm.IsPlaced)
             {
-                ScoreHandler.PlaceForm(_currForm, _grid);
                 _currForm = null;
             }
         }
@@ -200,6 +200,8 @@ public class Controller : MonoBehaviour
 
             
         }
+
+        
     }
 
     FormTemplate GetNextForm()
