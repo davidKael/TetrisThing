@@ -11,41 +11,31 @@ public class ScoreHandler
     /// </summary>
     /// <param name="form">form that was placed</param>
     /// <param name="grid">on which grid it was placed</param>
-    static internal void PlaceForm(BoxFormation form, PlayerGrid grid)
+
+
+    internal static int CalculateScore(int rows, int level = 1)
     {
-        List<int> rows = new List<int>();
-
-        foreach (Vector2Int placedPos in form.Positions)
+        int sum;
+        
+        switch (rows)
         {
-            if(!grid.Boxes.Values.Any(box => !box.IsActive && box.Position.y == placedPos.y))
-            {
-                if (!rows.Contains(placedPos.y))
-                {
-                    rows.Add(placedPos.y);
-                    
-                }
-            }
+            case 1:
+                sum = 100 * level;
+                break;
+            case 2:
+                sum = 300 * level;
+                break;
+            case 3:
+                sum = 500 * level;
+                break;
+            case 4:
+                sum = 800 * level;
+                break;
+            default:
+                sum = 0;
+                break;
         }
-
-        rows.Sort();
-
-        for (int row = 0; row < rows.Count; row++)
-        {
-            for (int col = 0; col < 10; col++)
-            {
-
-                grid.Boxes[new Vector2Int(col, rows[row])].ResetBox(true);
-            }
-
-        }
-
-        int rowsMoved = 0;
-        for (int row = 0; row < rows.Count; row++)
-        {
-            grid.MoveDownAll(rows[row] -rowsMoved, 1);
-            rowsMoved++;
-        }
-
+        return sum;
     }
     #endregion
 }

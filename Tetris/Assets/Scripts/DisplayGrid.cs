@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DisplayGrid : PlayerGrid
+public class DisplayGrid : GridBase
 {
 
     internal void DisplayForm(FormTemplate newForm)

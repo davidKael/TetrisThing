@@ -10,7 +10,7 @@ public class BoxFormation
     internal FormTemplate Form { get; }
     internal List<Vector2Int> Positions { get; private set; } = new List<Vector2Int>();
     internal List<Vector2Int> ghosts { get; private set; } = new List<Vector2Int>();
-    internal bool IsPlaced { get { return _isPlaced; } private set { _isPlaced = value; if(_isPlaced) GameState.IsGameOver = IsPlacedOverLimit(); } }
+    internal bool IsPlaced { get { return _isPlaced; }  }
     #endregion
 
     #region Fields
@@ -62,7 +62,7 @@ public class BoxFormation
     internal void InstaDrop()
     {
         RefreshBoxes(ghosts, Vector2Int.zero);
-        IsPlaced = true;
+        _grid.PlaceForm(this, out _isPlaced);
     }
 
     /// <summary>
@@ -107,6 +107,7 @@ public class BoxFormation
 
             _centerPos = nexRotCenter;
         }
+
     }
 
     /// <summary>
@@ -154,10 +155,9 @@ public class BoxFormation
         if (IsBlocked(velocity))
         {
             velocity = Vector2Int.zero;
-            IsPlaced = true;
+            _grid.PlaceForm(this, out _isPlaced);
         }
-
-        if (!IsPlaced)
+        else
         {
             List<Vector2Int> nextPositions = Positions.ConvertAll(pos => pos + velocity);
             Vector2Int newCenter = _centerPos + velocity;
@@ -202,10 +202,7 @@ public class BoxFormation
     /// Checks if any position is over grid border
     /// </summary>
     /// <returns></returns>
-    bool IsPlacedOverLimit()
-    {
-        return Positions.Any(pos => pos.y >= 20);
-    }
+
 
     /// <summary>
     /// To rotate BoxFormation 
