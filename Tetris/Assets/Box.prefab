@@ -121,13 +121,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1801712152587390537, guid: 37cdcbb7dff492d4b87b7822c86de149, type: 3}
-      propertyPath: InitialModule.startLifetime.scalar
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1801712152587390537, guid: 37cdcbb7dff492d4b87b7822c86de149, type: 3}
       propertyPath: TriggerModule.primitives.Array.data[0]
       value: 
       objectReference: {fileID: 7626447842845959248}
+    - target: {fileID: 1801712152587390537, guid: 37cdcbb7dff492d4b87b7822c86de149, type: 3}
+      propertyPath: SubModule.subEmitters.Array.data[0].emitter
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1801712152587390537, guid: 37cdcbb7dff492d4b87b7822c86de149, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].cycleCount
       value: 1

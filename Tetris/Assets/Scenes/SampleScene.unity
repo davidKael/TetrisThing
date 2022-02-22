@@ -6847,6 +6847,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7626447842845959248, guid: e1e60908e048126419ef2e6ba863ddbf, type: 3}
   m_PrefabInstance: {fileID: 848150321}
   m_PrefabAsset: {fileID: 0}
+--- !u!198 &857269264 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 315044704203139555, guid: e1e60908e048126419ef2e6ba863ddbf, type: 3}
+  m_PrefabInstance: {fileID: 7626447843734273359}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &862075119
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12288,8 +12293,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowGhosts: 1
-  _score: 0
   _scoreText: {fileID: 1962481866}
+  _playerState: {fileID: 1970608975}
 --- !u!1001 &1635313505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15375,6 +15380,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1970608974}
   - component: {fileID: 1970608973}
+  - component: {fileID: 1970608975}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -15394,6 +15400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4586e88130568945ac37bede1835af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerState: {fileID: 1970608975}
   _formTemplates:
   - {fileID: 11400000, guid: cb901d884e5888d44a6cc1d2dc2aac71, type: 2}
   - {fileID: 11400000, guid: ac64a1ca998ac6d41a0974887c8a4356, type: 2}
@@ -15435,6 +15442,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1970608975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970608972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7c9e613ce23a6c419648e6a3fe1d105, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1974251672
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17426,6 +17445,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1631046580}
     m_Modifications:
+    - target: {fileID: 7343375238531356358, guid: e1e60908e048126419ef2e6ba863ddbf, type: 3}
+      propertyPath: SubModule.subEmitters.Array.data[0].emitter
+      value: 
+      objectReference: {fileID: 857269264}
     - target: {fileID: 7626447842845959248, guid: e1e60908e048126419ef2e6ba863ddbf, type: 3}
       propertyPath: m_RootOrder
       value: 0

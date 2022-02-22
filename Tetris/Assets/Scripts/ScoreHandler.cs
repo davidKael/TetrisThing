@@ -37,5 +37,7 @@ public class ScoreHandler
         }
         return sum;
     }
+
+    
     #endregion
 }

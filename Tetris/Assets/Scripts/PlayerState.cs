@@ -7,14 +7,14 @@ public class PlayerState : MonoBehaviour
 {
     int _score;
     bool _isPlayerAlive;
-
-
+    int _level = 1;
+    int rowsCleared;
 
 
 
     #region Properties
     internal int Score { get { return _score; } }
-
+    internal int Level { get { return _level; } }
     #endregion
 
     private void Start()
@@ -39,5 +39,19 @@ public class PlayerState : MonoBehaviour
     internal void PlayerLost()
     {
         _isPlayerAlive = false;
+    }
+
+    internal void AddToRows(int rows)
+    {
+        rowsCleared += rows;
+        UpdateLevel();
+    }
+
+    void UpdateLevel()
+    {
+        if(_level * 10 <= rowsCleared)
+        {
+            _level++;
+        }
     }
 }

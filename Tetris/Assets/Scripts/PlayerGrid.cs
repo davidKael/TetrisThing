@@ -85,7 +85,8 @@ public class PlayerGrid : GridBase
 
             if (rows.Count > 0)
             {
-                _playerState.AddToScore(ScoreHandler.CalculateScore(rows.Count));
+                _playerState.AddToScore(ScoreHandler.CalculateScore(rows.Count, _playerState.Level));
+                _playerState.AddToRows(rows.Count);
                 UpdateText();
             }
 

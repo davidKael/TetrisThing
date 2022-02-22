@@ -115,7 +115,7 @@ public class Controller : MonoBehaviour
         }
         else
         {
-            _fallTimer -= Time.deltaTime * (Input.GetKey(KeyCode.DownArrow) && !Input.GetKeyUp(KeyCode.DownArrow) ? _verticalRushSpeed : 1);
+            _fallTimer -= Time.deltaTime * ((Input.GetKey(KeyCode.DownArrow) && !Input.GetKeyUp(KeyCode.DownArrow) ? _verticalRushSpeed : 1) * (_playerState.Level));
             output = 0;
         }
 
